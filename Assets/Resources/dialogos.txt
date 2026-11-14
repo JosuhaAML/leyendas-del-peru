@@ -1,0 +1,43 @@
+# Diálogos de los jefes en batalla: jefe|momento|frase
+# momentos: intro (al aparecer), fase2, especial (su mecánica), aturdido, cae (cae un jugador),
+#           pocavida (menos del 20 %), muerte, burla (de vez en cuando)
+chulla|intro|Este monte es mío... ¿Quién les dio permiso de entrar?
+chulla|fase2|¡Ahora conocerán la furia del bosque!
+chulla|especial|¿Cuál de nosotros es el verdadero?
+chulla|aturdido|¡Mis raíces... tiemblan!
+chulla|cae|Uno menos. El monte se lo traga.
+chulla|pocavida|El bosque... no me abandonará.
+chulla|muerte|El monte... volverá a crecer...
+chulla|burla|Te perderás entre mis árboles para siempre.
+yacu|intro|Las aguas me obedecen. Nadie sale de mi cocha.
+yacu|fase2|¡Despierten, aguas profundas!
+yacu|especial|Desde el fondo... te estoy mirando.
+yacu|aturdido|¡No! ¡La orilla me atrapa!
+yacu|cae|Al fondo... con los demás.
+yacu|pocavida|Mis aguas... se enturbian.
+yacu|muerte|La madre del agua... vuelve al fondo...
+yacu|burla|Acércate a la orilla... un poquito más.
+bufeo|intro|Buenas noches... ¿Bailamos? La fiesta es en el fondo del río.
+bufeo|fase2|Se acabó la música. Ahora el río cobra lo suyo.
+bufeo|especial|No te resistas a mi canto...
+bufeo|aturdido|¡Mi sombrero! ¡Nadie toca mi sombrero!
+bufeo|cae|Uno más para mi fiesta bajo el agua.
+bufeo|pocavida|La luna... se está ocultando.
+bufeo|muerte|Vuelvo al río... pero cada luna llena... regresaré.
+bufeo|burla|Qué pasos tan torpes. Déjame enseñarte.
+tunche|intro|Fiiiiuuu... ¿Escuchan mi silbido?
+tunche|fase2|No me velaron... ¡Ahora ustedes me acompañarán!
+tunche|especial|Si suena lejos... estoy cerca.
+tunche|aturdido|¡La luz! ¡La luz de las velas!
+tunche|cae|Otra alma... para mi silbido.
+tunche|pocavida|Recen por mí... recen...
+tunche|muerte|Al fin... al fin puedo descansar...
+tunche|burla|Shhh... escucha... estoy detrás de ti.
+pishtaco|intro|Caminante... estas tierras no son seguras de noche.
+pishtaco|fase2|Mi cuchillo tiene hambre.
+pishtaco|especial|Nadie me ve venir... hasta que es tarde.
+pishtaco|aturdido|¡Malditos sean!
+pishtaco|cae|Uno menos en el camino.
+pishtaco|pocavida|Los Andes... no me dejarán caer.
+pishtaco|muerte|La noche... se acaba para mí...
+pishtaco|burla|Tienen miedo. Puedo olerlo.

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dd65f2d59c7ed34a819eb7621d863a4, type: 3}
+  m_Name: Bufeo Colorado
+  m_EditorClassIdentifier: Assembly-CSharp::BossData
+  bossName: Bufeo Colorado
+  leyenda: "El delf\xEDn rosado del Amazonas. En noches de luna llena sale del r\xEDo como un joven elegante vestido de blanco, con sombrero para esconder su espir\xE1culo, y se lleva a las muchachas al fondo del r\xEDo."
+  retrato: {fileID: 2800000, guid: 35f8727111997554d92a082976a35d64, type: 3}
+  introSeconds: 6
+  maxHealth: 10900
+  moveSpeed: 4
+  meleeDamage: 22
+  meleeRange: 1.8
+  meleeCooldown: 1.8
+  areaDamage: 50
+  areaRadius: 6
+  areaCooldown: 11
+  areaWarningTime: 2
+  enrageAt: 0.35
+  enrageDamageMultiplier: 1.6

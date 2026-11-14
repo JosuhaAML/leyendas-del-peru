@@ -1,0 +1,25 @@
+LEYENDAS DEL PERÚ
+Proyecto final
+
+# DESARROLLADO POR
+Michael Josuha Alanya Masgo
+
+# LEYENDAS
+Tradición oral de la Amazonía y los Andes del Perú
+Chullachaqui · Yacumama · Bufeo Colorado · Tunche · Pishtaco
+
+# HECHO CON
+Motor: Unity 6 · Netcode for GameObjects
+Árboles, rocas, plantas, objetos y texturas: Poly Haven (licencia CC0)
+Animaciones de personajes: Mixamo
+Modelos 3D creados con IA: TRELLIS y TripoSR
+Voces del narrador y de los jefes: XTTS-v2
+Música y efectos de sonido: generados por código
+Canción de los créditos: «Camino largo» · anticuchostudios
+Programación y diseño con ayuda de Claude (Anthropic)
+
+# AGRADECIMIENTOS
+A mi profesor, por su guía y su apoyo en este proyecto
+
+# GRACIAS POR JUGAR
+¡Que las leyendas sigan contándose!

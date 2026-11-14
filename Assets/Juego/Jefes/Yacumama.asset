@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dd65f2d59c7ed34a819eb7621d863a4, type: 3}
+  m_Name: Yacumama
+  m_EditorClassIdentifier: Assembly-CSharp::BossData
+  bossName: Yacumama
+  leyenda: "La \"madre del agua\" (quechua yaku + mama): serpiente gigante de m\xE1s de 30 metros que vive en r\xEDos y cochas de la Amazon\xEDa y succiona a quien se acerca."
+  retrato: {fileID: 2800000, guid: 0d4f464d574f6e3489fdc8fcefc7b854, type: 3}
+  introSeconds: 6
+  maxHealth: 7700
+  moveSpeed: 0
+  meleeDamage: 16
+  meleeRange: 7.5
+  meleeCooldown: 1.6
+  areaDamage: 42
+  areaRadius: 7
+  areaCooldown: 9
+  areaWarningTime: 2
+  enrageAt: 0.3
+  enrageDamageMultiplier: 1.5
