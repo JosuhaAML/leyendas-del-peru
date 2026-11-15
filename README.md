@@ -123,7 +123,6 @@ About **13,400 lines of C#** across 59 scripts. Download the Windows build from 
 - Modelos 3D generados con IA: TRELLIS y TripoSR
 - Voces del narrador y de los jefes: XTTS-v2
 - Música y efectos de sonido: generados por código · Canción de créditos: «Camino largo», anticuchostudios
-- Programación y diseño con ayuda de Claude (Anthropic)
 
 ## Licencia / License
 
