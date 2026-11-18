@@ -77,8 +77,22 @@ public class LevelAmbience : MonoBehaviour
                 colorOverLife.color = blink;
                 break;
         }
+        // Menos partículas con calidad gráfica Baja / Media.
+        float k = Graficos.Particulas;
+        main.maxParticles = Mathf.Max(20, Mathf.RoundToInt(main.maxParticles * k));
+        emission.rateOverTimeMultiplier *= k;
         ps.Play();
         if (type == AmbienceType.Lluvia) CreateSplashes();
+    }
+
+    // Al cambiar la calidad gráfica en medio del nivel: se vuelve a crear con la nueva cantidad.
+    public void Rehacer()
+    {
+        if (ps == null) return;
+        Destroy(ps);
+        if (splashes != null) Destroy(splashes.gameObject);
+        ps = null; splashes = null;
+        Invoke(nameof(Start), 0.05f);
     }
 
     // Salpicaduras de lluvia: anillitos que se abren en el suelo alrededor del jugador.
@@ -98,7 +112,7 @@ public class LevelAmbience : MonoBehaviour
         main.maxParticles = 600;
         main.simulationSpace = ParticleSystemSimulationSpace.World;
         var emission = splashes.emission;
-        emission.rateOverTime = 420f;
+        emission.rateOverTime = 420f * Graficos.Particulas;
         var shape = splashes.shape;
         shape.shapeType = ParticleSystemShapeType.Box;
         shape.scale = new Vector3(30f, 0.01f, 30f);

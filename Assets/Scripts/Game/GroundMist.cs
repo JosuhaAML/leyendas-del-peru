@@ -43,6 +43,7 @@ public class GroundMist : MonoBehaviour
         // Empieza ya llena (sin esperar a que se forme).
         ps.Simulate(14f, true, true);
         ps.Play();
+        if (!Graficos.NieblaBaja) gameObject.SetActive(false);   // calidad Baja: sin niebla baja
     }
 
     void LateUpdate()

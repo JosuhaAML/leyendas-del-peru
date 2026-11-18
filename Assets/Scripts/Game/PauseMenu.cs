@@ -2,7 +2,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Menú de pausa (Esc) durante los niveles: volumen de música y efectos, controles y salir.
+// Menú de pausa (Esc) durante los niveles: volumen, calidad gráfica, controles y salir.
 // El juego no se detiene (es en línea), pero tu personaje deja de recibir teclas mientras está abierto.
 public class PauseMenu : MonoBehaviour
 {
@@ -31,7 +31,7 @@ public class PauseMenu : MonoBehaviour
         GUI.DrawTexture(new Rect(0, 0, w, 720), Texture2D.whiteTexture);
         GUI.color = Color.white;
 
-        var area = new Rect(w / 2 - 250, 90, 500, 560);
+        var area = new Rect(w / 2 - 250, 60, 500, 620);
         UIStyle.Panel(area);
         GUILayout.BeginArea(new Rect(area.x + 30, area.y + 24, area.width - 60, area.height - 48));
         GUILayout.Label("PAUSA", new GUIStyle(UIStyle.Title) { fontSize = 32 });
@@ -49,6 +49,12 @@ public class PauseMenu : MonoBehaviour
             GUILayout.Label($"Narrador: {Mathf.RoundToInt(audio.narratorVolume * 100)}%", UIStyle.Text);
             audio.narratorVolume = GUILayout.HorizontalSlider(audio.narratorVolume, 0f, 1f);
         }
+
+        // Calidad gráfica (Baja / Media / Alta) y contador de FPS.
+        GUILayout.Space(10);
+        GUILayout.Label($"Gráficos: {Graficos.Nombres[(int)Graficos.Nivel]}", UIStyle.Text);
+        var gr = GUILayoutUtility.GetRect(area.width - 60, 72);
+        Graficos.DibujarSelector(gr);
 
         GUILayout.Space(14);
         GUILayout.Label("WASD mover · Clic izquierdo ataque básico · Espacio esquivar · 1 2 3 4 habilidades\nR definitivo · E revivir · Z X C V chat rápido · B saludar · N bailar · M celebrar · Clic derecho girar cámara",

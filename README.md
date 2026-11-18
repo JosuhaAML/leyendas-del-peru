@@ -64,7 +64,7 @@ Un equipo de héroes andinos enfrenta, nivel por nivel, a cinco criaturas de la 
 
 **Controles:** WASD mover · Clic ataque básico · Clic derecho girar cámara · Espacio esquivar · 1 2 3 4 habilidades · R poder definitivo · E revivir aliado · Z X C V chat rápido · B N M gestos · Esc pausa · F11 pantalla completa
 
-**Requisitos:** Windows 10/11 de 64 bits; tarjeta gráfica dedicada recomendada.
+**Requisitos:** Windows 10/11 de 64 bits. Funciona también con gráficos integrados: si va lento, pon **Gráficos → Baja** en Opciones o con Esc (la primera vez se elige sola según tu PC).
 
 ### Lo técnico (dónde mirar el código)
 
@@ -81,6 +81,8 @@ Un equipo de héroes andinos enfrenta, nivel por nivel, a cinco criaturas de la 
   → [`AutoTest.cs`](Assets/Scripts/Game/AutoTest.cs)
 - **Proyecto generado por código**: escenas, niveles, jefes, prefabs y el build se crean desde scripts de editor (menú **Leyendas → Generar proyecto**).
   → [`GameSetup.cs`](Assets/Editor/GameSetup.cs), [`BuildGame.cs`](Assets/Editor/BuildGame.cs)
+- **Calidad gráfica adaptable** (Baja / Media / Alta) que detecta la tarjeta de video: apaga sombras, postprocesado y luces por píxel, reduce partículas y resolución. En el nivel más pesado pasa de ~80 a ~200 FPS.
+  → [`Graficos.cs`](Assets/Scripts/Game/Graficos.cs)
 - **Interfaz** IMGUI con estilo propio: HUD, menú, selección de clase, bestiario, logros, epílogo y créditos.
   → [`HUD.cs`](Assets/Scripts/Game/HUD.cs), [`UIStyle.cs`](Assets/Scripts/Game/UIStyle.cs), [`Bestiario.cs`](Assets/Scripts/Game/Bestiario.cs)
 
@@ -108,6 +110,7 @@ A party of Andean heroes faces five creatures from Peruvian folklore, from the A
 - **Difficulty scaling** by party size, tuned from measured DPS.
 - **Procedural hero animation** written in code, **bot allies** and an **autopilot**.
 - **Automated play tests** via command-line flags that play the game, take screenshots and log results (the screenshots above were generated this way).
+- **Adaptive graphics quality** (Low / Medium / High) auto-detected from the GPU; ~2.5× faster on the heaviest level.
 - **Code-generated project**: scenes, levels, bosses, prefabs and builds are created from editor scripts.
 
 About **13,400 lines of C#** across 59 scripts. Download the Windows build from **[Releases](https://github.com/JosuhaAML/leyendas-del-peru/releases/latest)**.

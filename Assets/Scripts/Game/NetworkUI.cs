@@ -114,13 +114,13 @@ public class NetworkUI : MonoBehaviour
 
         // Logros (arriba a la derecha).
         if (UIStyle.IconButton(new Rect(w - 250, 18, 220, 46), "sol", $"Logros {Achievements.UnlockedCount}/{Achievements.All.Length}", UIStyle.Button, 18))
-            showAchievements = !showAchievements;
+            { showAchievements = !showAchievements; showSound = false; }
         // Bestiario y créditos (arriba a la izquierda).
         if (UIStyle.IconButton(new Rect(30, 18, 200, 46), "chakana", "Bestiario", UIStyle.Button, 18)) { Bestiario.Open = true; showAchievements = false; }
         if (UIStyle.IconButton(new Rect(30, 72, 200, 40), "sol", "Créditos", UIStyle.Button, 16)) { Creditos.Show(); showAchievements = false; }
-        if (UIStyle.IconButton(new Rect(30, 120, 200, 40), "grito", "Sonido", UIStyle.Button, 16)) { showSound = !showSound; showAchievements = false; }
+        if (UIStyle.IconButton(new Rect(30, 120, 200, 40), "grito", "Opciones", UIStyle.Button, 16)) { showSound = !showSound; showAchievements = false; }
         if (showAchievements) DrawAchievements(w);
-        if (showSound) DrawSound();
+        if (showSound) DrawSound(w);
 
         // Pie con los controles.
         UIStyle.Separator(new Rect(cx - 470, 692, 120, 20));
@@ -209,19 +209,22 @@ public class NetworkUI : MonoBehaviour
     bool showAchievements, showSound;
     public void TestSound(bool v) => showSound = v;
 
-    // Panel de sonido: música, efectos y voz del narrador (se guarda en esta PC).
-    void DrawSound()
+    // Panel de opciones: música, efectos, voz del narrador y calidad gráfica (se guarda en esta PC).
+    void DrawSound(float w)
     {
         var audio = GameAudio.Instance;
         if (audio == null) return;
-        var r = new Rect(30, 170, 380, 290);
+        var r = new Rect(w - 312, 76, 288, 412);   // a la derecha, donde no hay botones debajo (el de Jugar termina antes)
         UIStyle.Panel(r);
-        GUI.Label(new Rect(r.x, r.y + 14, r.width, 34), "SONIDO", new GUIStyle(UIStyle.Title) { fontSize = 24 });
+        GUI.Label(new Rect(r.x, r.y + 14, r.width, 34), "OPCIONES", new GUIStyle(UIStyle.Title) { fontSize = 24 });
         var label = new GUIStyle(UIStyle.Text) { fontSize = 17, alignment = TextAnchor.MiddleLeft };
         float y = r.y + 62;
-        audio.musicVolume = VolumeRow(new Rect(r.x + 30, y, r.width - 60, 50), "Música", audio.musicVolume, label); y += 62;
-        audio.effectsVolume = VolumeRow(new Rect(r.x + 30, y, r.width - 60, 50), "Efectos", audio.effectsVolume, label); y += 62;
-        audio.narratorVolume = VolumeRow(new Rect(r.x + 30, y, r.width - 60, 50), "Narrador", audio.narratorVolume, label);
+        audio.musicVolume = VolumeRow(new Rect(r.x + 24, y, r.width - 48, 50), "Música", audio.musicVolume, label); y += 58;
+        audio.effectsVolume = VolumeRow(new Rect(r.x + 24, y, r.width - 48, 50), "Efectos", audio.effectsVolume, label); y += 58;
+        audio.narratorVolume = VolumeRow(new Rect(r.x + 24, y, r.width - 48, 50), "Narrador", audio.narratorVolume, label); y += 58;
+        GUI.Label(new Rect(r.x + 24, y, r.width - 48, 24), "Gráficos", label);
+        GUI.Label(new Rect(r.x + 24, y + 104, r.width - 48, 22), "Si el juego va lento, usa Baja", new GUIStyle(UIStyle.Small) { fontSize = 13, fontStyle = FontStyle.Italic, alignment = TextAnchor.MiddleLeft });
+        Graficos.DibujarSelector(new Rect(r.x + 24, y + 30, r.width - 48, 70));
         if (GUI.Button(new Rect(r.center.x - 80, r.yMax - 46, 160, 34), "Cerrar", UIStyle.Button)) showSound = false;
     }
 

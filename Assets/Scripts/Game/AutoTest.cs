@@ -208,6 +208,16 @@ public class AutoTest : MonoBehaviour
         yield return new WaitForSeconds(1.8f);
         Shot("2_presentacion");
         Debug.Log("AUTOTEST jefe activo: " + (BossAI.Active != null ? BossAI.Active.Data.bossName : "ninguno"));
+        if (System.Array.IndexOf(args, "-pausatest") >= 0)
+        {
+            // Menú de pausa con el selector de gráficos.
+            yield return new WaitForSeconds(3f);
+            PauseMenu.SetOpen(true);
+            yield return new WaitForSeconds(0.5f);
+            Shot("pausa");
+            Application.Quit();
+            yield break;
+        }
 
         var player = NetworkManager.Singleton.LocalClient.PlayerObject;
 
