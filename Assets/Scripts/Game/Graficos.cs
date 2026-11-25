@@ -10,7 +10,7 @@ public enum CalidadGrafica { Baja, Media, Alta }
 // Se guarda en esta PC y se aplica SOLO dentro de los niveles: menú, sala, pantallas de carga y victoria van siempre en Alta (son livianos).
 // Se reaplica al cargar cada escena. También muestra el contador de FPS si se activa.
 //
-//  Baja : sin sombras, sin postprocesado, luces por vértice, menos partículas, sin niebla baja y resolución al 75 %.
+//  Baja : sin sombras, postprocesado solo con el color del nivel (sin brillo ni oclusión), luces por vértice, menos partículas,
 //  Media: sombras duras cercanas, postprocesado sin oclusión ambiental, 1 luz por píxel, partículas a 2/3.
 //  Alta : todo al máximo (como estaba antes).
 public class Graficos : MonoBehaviour
@@ -29,6 +29,7 @@ public class Graficos : MonoBehaviour
     public static float EscalaResolucion => Efectiva == CalidadGrafica.Baja ? 0.75f : 1f;
 
     static Graficos instance;
+    static readonly System.Collections.Generic.Dictionary<Light, LightShadows> sombrasOriginales = new System.Collections.Generic.Dictionary<Light, LightShadows>();
     float fpsTimer, fpsShown;
     int fpsFrames;
     float slowSince = -1f, tipUntil;
@@ -55,7 +56,7 @@ public class Graficos : MonoBehaviour
         MostrarFps = PlayerPrefs.GetInt("MostrarFps", 0) == 1;
         Debug.Log($"GRAFICOS: {SystemInfo.graphicsDeviceName} ({SystemInfo.graphicsMemorySize} MB) → calidad {Nombres[(int)Nivel]}");
 
-        SceneManager.sceneLoaded += (s, m) => { Aplicar(); ScreenMode.AplicarResolucion(); };
+        SceneManager.sceneLoaded += (s, m) => { sombrasOriginales.Clear(); Aplicar(); ScreenMode.AplicarResolucion(); };
         Aplicar();
     }
 
@@ -134,11 +135,11 @@ public class Graficos : MonoBehaviour
         {
             if (cam.targetTexture != null) continue;   // la vista previa del héroe tiene su propia calidad
             cam.allowMSAA = q == CalidadGrafica.Alta;
-            cam.allowHDR = q != CalidadGrafica.Baja;
+            cam.allowHDR = true;   // la corrección de color de cada nivel la necesita (Baja también la mantiene)
             var layer = cam.GetComponent<PostProcessLayer>();
             if (layer != null)
             {
-                layer.enabled = q != CalidadGrafica.Baja;
+                layer.enabled = true;   // en Baja solo queda el color del nivel y la viñeta: lo pesado se apaga abajo
                 layer.antialiasingMode = q == CalidadGrafica.Alta ? PostProcessLayer.Antialiasing.FastApproximateAntialiasing
                                                                       : PostProcessLayer.Antialiasing.None;
             }
@@ -148,11 +149,16 @@ public class Graficos : MonoBehaviour
         {
             if (vol.sharedProfile == null) continue;
             if (vol.profile.TryGetSettings(out AmbientOcclusion ao)) ao.active = q == CalidadGrafica.Alta;
-            if (vol.profile.TryGetSettings(out Bloom bloom)) bloom.fastMode.Override(q != CalidadGrafica.Alta);
+            if (vol.profile.TryGetSettings(out Bloom bloom)) { bloom.active = q != CalidadGrafica.Baja; bloom.fastMode.Override(q != CalidadGrafica.Alta); }
         }
         // Luces que no son el sol: en Baja y Media no hacen sombra (las sombras de luces puntuales son carísimas).
+        // Se guarda la sombra original de cada luz para devolverla al volver a Alta en el mismo nivel.
         foreach (var l in FindObjectsByType<Light>())
-            if (l.type != LightType.Directional && q != CalidadGrafica.Alta) l.shadows = LightShadows.None;
+        {
+            if (l.type == LightType.Directional) continue;
+            if (!sombrasOriginales.ContainsKey(l)) sombrasOriginales[l] = l.shadows;
+            l.shadows = q == CalidadGrafica.Alta ? sombrasOriginales[l] : LightShadows.None;
+        }
     }
 
     void Update()

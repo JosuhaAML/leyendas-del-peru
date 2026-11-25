@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
-// Árboles que tapan la cámara: si un árbol real está entre la cámara y tu personaje (o la cámara quedó dentro
+// Árboles y casas que tapan la cámara: si uno está entre la cámara y tu personaje (o la cámara quedó dentro
 // de su copa), se oculta mientras estorba. Su sombra se queda, así que casi no se nota y la pelea se ve siempre.
 public class CameraFoliage : MonoBehaviour
 {
@@ -15,6 +15,9 @@ public class CameraFoliage : MonoBehaviour
         DontDestroyOnLoad(go);
         go.AddComponent<CameraFoliage>();
     }
+
+    // Lo que puede tapar la vista: árboles, casas del pueblo ribereño y andino, y ruinas.
+    static readonly string[] Tapan = { "Arbol real", "Arbol", "Palmera", "Casa de adobe", "Casa ribereña", "Ruinas" };
 
     class Tree { public Bounds bounds; public Renderer[] renderers; public bool hidden; }
     readonly List<Tree> trees = new List<Tree>();
@@ -28,7 +31,7 @@ public class CameraFoliage : MonoBehaviour
         trees.Clear();
         foreach (var t in FindObjectsByType<Transform>(FindObjectsSortMode.None))
         {
-            if (t.name != "Arbol real" && t.name != "Arbol" && t.name != "Palmera") continue;
+            if (System.Array.IndexOf(Tapan, t.name) < 0) continue;
             var rs = t.GetComponentsInChildren<Renderer>();
             if (rs.Length == 0) continue;
             var b = rs[0].bounds;

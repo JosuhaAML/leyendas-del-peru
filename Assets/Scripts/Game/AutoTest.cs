@@ -376,6 +376,33 @@ public class AutoTest : MonoBehaviour
             yield break;
         }
 
+        if (System.Array.IndexOf(args, "-casatest") >= 0)
+        {
+            // Pone al héroe justo detrás de una casa (vista desde la cámara) y comprueba que la casa se oculte.
+            yield return new WaitForSeconds(2f);
+            BossAI.Active.Paused = true;
+            player.GetComponent<Health>().Invulnerable = true;
+            Transform casa = null;
+            foreach (var t in FindObjectsByType<Transform>(FindObjectsSortMode.None))
+                if (t.name == "Casa de adobe" || t.name == "Casa ribereña") { casa = t; break; }
+            if (casa == null) { Debug.Log("AUTOTEST casa: no hay casas"); Application.Quit(); yield break; }
+            var rends = casa.GetComponentsInChildren<Renderer>();
+            var b = rends[0].bounds; foreach (var r in rends) b.Encapsulate(r.bounds);
+            var cam = Camera.main.transform;
+            var fwd = Vector3.ProjectOnPlane(cam.forward, Vector3.up).normalized;
+            var spot = new Vector3(b.center.x, 0f, b.center.z) + fwd * (Mathf.Max(b.extents.x, b.extents.z) + 1.5f);
+            var ccC = player.GetComponent<CharacterController>();
+            ccC.enabled = false;
+            player.GetComponent<Unity.Netcode.Components.NetworkTransform>().Teleport(spot, Quaternion.LookRotation(fwd), Vector3.one);
+            ccC.enabled = true;
+            yield return new WaitForSeconds(1.5f);
+            int ocultas = 0; foreach (var r in rends) if (r.shadowCastingMode == UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly) ocultas++;
+            Debug.Log($"AUTOTEST casa: {casa.name}, partes ocultas {ocultas}/{rends.Length}");
+            Shot("casa_detras");
+            Application.Quit();
+            yield break;
+        }
+
         if (System.Array.IndexOf(args, "-atascotest") >= 0)
         {
             // Mete al jugador dentro de una roca y comprueba que el anti-atascos lo saque solo.
