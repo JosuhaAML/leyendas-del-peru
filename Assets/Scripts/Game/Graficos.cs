@@ -7,7 +7,8 @@ public enum CalidadGrafica { Baja, Media, Alta }
 
 // Calidad gráfica (Baja / Media / Alta), elegible en Opciones del menú y en la pausa (Esc).
 // La primera vez se elige sola según la tarjeta de video (gráficos integrados → Baja).
-// Se guarda en esta PC y se aplica al cargar cada escena. También muestra el contador de FPS si se activa.
+// Se guarda en esta PC y se aplica SOLO dentro de los niveles: menú, sala, pantallas de carga y victoria van siempre en Alta (son livianos).
+// Se reaplica al cargar cada escena. También muestra el contador de FPS si se activa.
 //
 //  Baja : sin sombras, sin postprocesado, luces por vértice, menos partículas, sin niebla baja y resolución al 75 %.
 //  Media: sombras duras cercanas, postprocesado sin oclusión ambiental, 1 luz por píxel, partículas a 2/3.
@@ -19,9 +20,13 @@ public class Graficos : MonoBehaviour
     public static readonly string[] Nombres = { "Baja", "Media", "Alta" };
 
     // Multiplicador para la cantidad de partículas de clima y ambiente.
-    public static float Particulas => Nivel == CalidadGrafica.Baja ? 0.35f : Nivel == CalidadGrafica.Media ? 0.65f : 1f;
-    public static bool NieblaBaja => Nivel != CalidadGrafica.Baja;
-    public static float EscalaResolucion => Nivel == CalidadGrafica.Baja ? 0.75f : 1f;
+    // La calidad que se usa de verdad ahora: la elegida dentro de un nivel, Alta fuera de los niveles.
+    public static bool EnNivel => SceneManager.GetActiveScene().name.StartsWith("Nivel");
+    public static CalidadGrafica Efectiva => EnNivel ? Nivel : CalidadGrafica.Alta;
+
+    public static float Particulas => Efectiva == CalidadGrafica.Baja ? 0.35f : Efectiva == CalidadGrafica.Media ? 0.65f : 1f;
+    public static bool NieblaBaja => Efectiva != CalidadGrafica.Baja;
+    public static float EscalaResolucion => Efectiva == CalidadGrafica.Baja ? 0.75f : 1f;
 
     static Graficos instance;
     float fpsTimer, fpsShown;
@@ -50,7 +55,7 @@ public class Graficos : MonoBehaviour
         MostrarFps = PlayerPrefs.GetInt("MostrarFps", 0) == 1;
         Debug.Log($"GRAFICOS: {SystemInfo.graphicsDeviceName} ({SystemInfo.graphicsMemorySize} MB) → calidad {Nombres[(int)Nivel]}");
 
-        SceneManager.sceneLoaded += (s, m) => Aplicar();
+        SceneManager.sceneLoaded += (s, m) => { Aplicar(); ScreenMode.AplicarResolucion(); };
         Aplicar();
     }
 
@@ -69,12 +74,11 @@ public class Graficos : MonoBehaviour
     public static void Cambiar(CalidadGrafica nivel)
     {
         if (nivel == Nivel) return;
-        bool cambiaResolucion = (nivel == CalidadGrafica.Baja) != (Nivel == CalidadGrafica.Baja);
         Nivel = nivel;
         PlayerPrefs.SetInt("Calidad", (int)nivel);
         PlayerPrefs.Save();
         Aplicar();
-        if (cambiaResolucion) ScreenMode.AplicarResolucion();
+        ScreenMode.AplicarResolucion();   // siempre desde la resolución real del monitor
         // El clima y la niebla se crean al empezar el nivel: se rehacen con la nueva cantidad.
         foreach (var a in FindObjectsByType<LevelAmbience>()) a.Rehacer();
         foreach (var m in FindObjectsByType<GroundMist>(FindObjectsInactive.Include)) m.gameObject.SetActive(NieblaBaja);
@@ -89,7 +93,8 @@ public class Graficos : MonoBehaviour
 
     static void Aplicar()
     {
-        switch (Nivel)
+        var q = Efectiva;
+        switch (q)
         {
             case CalidadGrafica.Baja:
                 QualitySettings.SetQualityLevel(1, true);
@@ -128,13 +133,13 @@ public class Graficos : MonoBehaviour
         foreach (var cam in FindObjectsByType<Camera>())
         {
             if (cam.targetTexture != null) continue;   // la vista previa del héroe tiene su propia calidad
-            cam.allowMSAA = Nivel == CalidadGrafica.Alta;
-            cam.allowHDR = Nivel != CalidadGrafica.Baja;
+            cam.allowMSAA = q == CalidadGrafica.Alta;
+            cam.allowHDR = q != CalidadGrafica.Baja;
             var layer = cam.GetComponent<PostProcessLayer>();
             if (layer != null)
             {
-                layer.enabled = Nivel != CalidadGrafica.Baja;
-                layer.antialiasingMode = Nivel == CalidadGrafica.Alta ? PostProcessLayer.Antialiasing.FastApproximateAntialiasing
+                layer.enabled = q != CalidadGrafica.Baja;
+                layer.antialiasingMode = q == CalidadGrafica.Alta ? PostProcessLayer.Antialiasing.FastApproximateAntialiasing
                                                                       : PostProcessLayer.Antialiasing.None;
             }
         }
@@ -142,12 +147,12 @@ public class Graficos : MonoBehaviour
         foreach (var vol in FindObjectsByType<PostProcessVolume>())
         {
             if (vol.sharedProfile == null) continue;
-            if (vol.profile.TryGetSettings(out AmbientOcclusion ao)) ao.active = Nivel == CalidadGrafica.Alta;
-            if (vol.profile.TryGetSettings(out Bloom bloom)) bloom.fastMode.Override(Nivel != CalidadGrafica.Alta);
+            if (vol.profile.TryGetSettings(out AmbientOcclusion ao)) ao.active = q == CalidadGrafica.Alta;
+            if (vol.profile.TryGetSettings(out Bloom bloom)) bloom.fastMode.Override(q != CalidadGrafica.Alta);
         }
         // Luces que no son el sol: en Baja y Media no hacen sombra (las sombras de luces puntuales son carísimas).
         foreach (var l in FindObjectsByType<Light>())
-            if (l.type != LightType.Directional && Nivel != CalidadGrafica.Alta) l.shadows = LightShadows.None;
+            if (l.type != LightType.Directional && q != CalidadGrafica.Alta) l.shadows = LightShadows.None;
     }
 
     void Update()

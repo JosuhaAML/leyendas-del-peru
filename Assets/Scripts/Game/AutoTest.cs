@@ -51,7 +51,14 @@ public class AutoTest : MonoBehaviour
 
         yield return new WaitForSeconds(3f);
         Shot("1_menu");
-
+        bool resol = System.Array.IndexOf(args, "-resoltest") >= 0;
+        if (resol)
+        {
+            // En el menú la calidad elegida NO debe bajar la resolución (siempre la del monitor).
+            Graficos.Cambiar(CalidadGrafica.Baja);
+            yield return new WaitForSecondsRealtime(1.5f);
+            Debug.Log($"AUTOTEST resol menú con Baja: {Screen.width}x{Screen.height} (objetivo {ScreenMode.Objetivo()}) efectiva={Graficos.Efectiva}");
+        }
         int hostArg = System.Array.IndexOf(args, "-onlinehost"), joinArg = System.Array.IndexOf(args, "-onlinejoin");
         if (hostArg >= 0 || joinArg >= 0)
         {
@@ -208,7 +215,22 @@ public class AutoTest : MonoBehaviour
         yield return new WaitForSeconds(1.8f);
         Shot("2_presentacion");
         Debug.Log("AUTOTEST jefe activo: " + (BossAI.Active != null ? BossAI.Active.Data.bossName : "ninguno"));
-        if (System.Array.IndexOf(args, "-pausatest") >= 0)
+        if (resol)
+        {
+            // Dentro del nivel: Baja = 75 %, Media y Alta = 100 %; repetir varias veces no debe achicarla más.
+            CalidadGrafica[] orden = { CalidadGrafica.Baja, CalidadGrafica.Alta, CalidadGrafica.Media, CalidadGrafica.Baja, CalidadGrafica.Alta,
+                                       CalidadGrafica.Baja, CalidadGrafica.Media, CalidadGrafica.Baja, CalidadGrafica.Alta };
+            yield return new WaitForSecondsRealtime(1.5f);
+            Debug.Log($"AUTOTEST resol nivel al entrar: {Screen.width}x{Screen.height} efectiva={Graficos.Efectiva}");
+            foreach (var q in orden)
+            {
+                Graficos.Cambiar(q);
+                yield return new WaitForSecondsRealtime(1.5f);
+                Debug.Log($"AUTOTEST resol nivel {q}: {Screen.width}x{Screen.height} (objetivo {ScreenMode.Objetivo()}) sombras={QualitySettings.shadows}");
+            }
+            Application.Quit();
+            yield break;
+        }        if (System.Array.IndexOf(args, "-pausatest") >= 0)
         {
             // Menú de pausa con el selector de gráficos.
             yield return new WaitForSeconds(3f);

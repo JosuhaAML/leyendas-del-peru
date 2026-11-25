@@ -223,7 +223,7 @@ public class NetworkUI : MonoBehaviour
         audio.effectsVolume = VolumeRow(new Rect(r.x + 24, y, r.width - 48, 50), "Efectos", audio.effectsVolume, label); y += 58;
         audio.narratorVolume = VolumeRow(new Rect(r.x + 24, y, r.width - 48, 50), "Narrador", audio.narratorVolume, label); y += 58;
         GUI.Label(new Rect(r.x + 24, y, r.width - 48, 24), "Gráficos", label);
-        GUI.Label(new Rect(r.x + 24, y + 104, r.width - 48, 22), "Si el juego va lento, usa Baja", new GUIStyle(UIStyle.Small) { fontSize = 13, fontStyle = FontStyle.Italic, alignment = TextAnchor.MiddleLeft });
+        GUI.Label(new Rect(r.x + 24, y + 104, r.width - 48, 22), "Se aplica al jugar. Si va lento, usa Baja", new GUIStyle(UIStyle.Small) { fontSize = 13, fontStyle = FontStyle.Italic, alignment = TextAnchor.MiddleLeft });
         Graficos.DibujarSelector(new Rect(r.x + 24, y + 30, r.width - 48, 70));
         if (GUI.Button(new Rect(r.center.x - 80, r.yMax - 46, 160, 34), "Cerrar", UIStyle.Button)) showSound = false;
     }
